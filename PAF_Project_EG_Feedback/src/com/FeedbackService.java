@@ -18,7 +18,7 @@ import org.jsoup.nodes.Document;
 public class FeedbackService {
 	Feedback feedbackObj = new Feedback();
 	
-	//Read function feedback message
+	//Read feedback message
 	@GET
 	@Path("/")
 	@Produces(MediaType.TEXT_HTML)
@@ -27,7 +27,7 @@ public class FeedbackService {
 		return feedbackObj.readFeedbacks();
 	}
 	
-	//Insert function feedback message
+	//Insert feedback message
 	@POST
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -43,7 +43,7 @@ public class FeedbackService {
 		return output;
 	}
 	
-	//Update function feedback message
+	//Update feedback message
 	@PUT
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -65,7 +65,7 @@ public class FeedbackService {
 		return output;
 	}
 	
-	//Delete function feedback message
+	//Delete feedback message
 	@DELETE
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_XML)
