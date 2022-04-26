@@ -28,7 +28,7 @@ public class BillingService {
 	@Produces(MediaType.TEXT_HTML)
 	public String readBills()
 	 {
-	 return billingObj.readBills();
+	 	return billingObj.readBills();
 	 }
 	
 	@POST
