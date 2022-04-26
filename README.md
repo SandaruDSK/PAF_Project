@@ -1,2 +1,2 @@
-# PAF_Project_EG
+# PAF_Project
 Electro Gird Online System Development
