@@ -96,14 +96,14 @@ public class Feedback {
 					String F_Message = rs.getString("F_Message");
 					
 					// Add into the html table
-					output += "<tr><td>" + F_Name + "</td>";
+					output += "<tr><td><input id='hidFeedbackIDUpdate' name='hidFeedbackIDUpdate' type='hidden' value='" + F_ID + "'>"+ F_Name + "</td>";
 					output += "<td>" + F_ContactNo + "</td>";
 					output += "<td>" + F_Email + "</td>";
 					output += "<td>" + F_Message + "</td>";
 					
 					// buttons
-					output += "<td><input name='btnUpdate' type='button' value='Update' class='btn btn-secondary'></td>" + "<td><form method='post' action='feedback.jsp'>" + "<input name='btnRemove' type='submit' value='Remove'class='btn btn-danger'>"
-								+ "<input name='F_ID' type='hidden' value='" + F_ID
+					output += "<td><input name='btnUpdate' type='button' value='Update' class='btnUpdate btn btn-secondary'></td>" + "<td><form method='post' action='Feedback.jsp'>" + "<input name='btnRemove' type='submit' value='Remove'class='btn btn-danger'>"
+								+ "<input name='hidFeedbackIDDelete' type='hidden' value='" + F_ID
 								+ "'>" + "</form></td></tr>";
 				}
 				
