@@ -37,8 +37,7 @@ public class Feedback {
 			{return "Error while connecting to the database for inserting."; }
 			
 			// create a prepared statement
-			String query = " insert into Feedback (`F_ID`,`F_Name`,`F_ContactNo`,`F_Email`,`F_Message`)"
-							+ " values (?, ?, ?, ?, ?)";
+			String query = " insert into feedback (`F_ID`,`F_Name`,`F_ContactNo`,`F_Email`,`F_Message`)" + " values (?, ?, ?, ?, ?)";
 			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			
@@ -52,12 +51,14 @@ public class Feedback {
 			// execute the statement
 			preparedStmt.execute();
 			con.close();
-			
-			output = "Inserted feedback details successfully";
+			String newItems = readFeedbacks();
+			output = "{\"status\":\"success\", \"data\": \"" +
+			newItems + "\"}";
+
 		}
 		catch (Exception e)
 		{
-			output = "Error while inserting the feedback details.";
+			output = "{\"status\":\"error\", \"data\": \"Error while inserting the item.\"}";
 			System.err.println(e.getMessage());
 		}
 		
@@ -74,7 +75,9 @@ public class Feedback {
 				Connection con = connect();
 				
 				if (con == null)
-				{return "Error while connecting to the database for reading."; }
+				{
+					return "Error while connecting to the database for reading."; 
+				}
 				
 				// Prepare the html table to be displayed
 				output = "<table border='1'><tr><th>Name</th><th>Contact Number</th>" +
@@ -82,7 +85,7 @@ public class Feedback {
 						"<th>Message</th>" +
 						"<th>Update</th><th>Remove</th></tr>";
 				
-				String query = "select * from Feedback";
+				String query = "select * from feedback";
 				Statement stmt = con.createStatement();
 				ResultSet rs = stmt.executeQuery(query);
 				
@@ -102,9 +105,11 @@ public class Feedback {
 					output += "<td>" + F_Message + "</td>";
 					
 					// buttons
-					output += "<td><input name='btnUpdate' type='button' value='Update' class='btnUpdate btn btn-secondary'></td>" + "<td><form method='post' action='Feedback.jsp'>" + "<input name='btnRemove' type='submit' value='Remove'class='btn btn-danger'>"
-								+ "<input name='hidFeedbackIDDelete' type='hidden' value='" + F_ID
-								+ "'>" + "</form></td></tr>";
+					output += "<td><input name='btnUpdate' type='button' value='Update' class='btnUpdate btn btn-secondary'></td>"
+				            + "<td><input name='btnRemove' type='button' value='Remove' class='btnRemove btn btn-danger' data-itemid='"
+				            + F_ID + "'>" + "</td></tr>";
+					
+					
 				}
 				
 				con.close();
@@ -118,8 +123,9 @@ public class Feedback {
 				System.err.println(e.getMessage());
 			}
 			
-			return output;
-		}
+		return output;
+	}
+
 	
 	public String updateFeedback(String ID, String name, String contactNumber, String email, String message)
 	{
@@ -133,7 +139,7 @@ public class Feedback {
 			{return "Error while connecting to the database for updating."; }
 			
 			// create a prepared statement
-			String query = "UPDATE Feedback SET F_Name=?,F_ContactNo=?,F_Email=?,F_Message=? WHERE F_ID=?";
+			String query = "UPDATE feedback SET F_Name=?,F_ContactNo=?,F_Email=?,F_Message=? WHERE F_ID=?";
 		
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			
@@ -147,13 +153,14 @@ public class Feedback {
 			// execute the statement
 			preparedStmt.execute();
 			con.close();
-			
-			output = "Updated the feedback details successfully";
+			String newItems = readFeedbacks();
+			output = "{\"status\":\"success\", \"data\": \"" +
+			newItems + "\"}";
 		}
 		catch (Exception e)
 		{
-			output = "Error while updating the feedback details.";
-			System.err.println(e.getMessage());
+			output = "{\"status\":\"error\", \"data\": \"Error while updating the item.\"}";
+					System.err.println(e.getMessage());
 		}
 		
 		return output;
@@ -171,7 +178,7 @@ public class Feedback {
 			{return "Error while connecting to the database for deleting."; }
 			
 			// create a prepared statement
-			String query = "delete from Feedback where F_ID=?";
+			String query = "delete from feedback where F_ID=?";
 			
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 			
@@ -181,13 +188,14 @@ public class Feedback {
 			// execute the statement
 			preparedStmt.execute();
 			con.close();
-			
-			output = "Deleted the feedback details successfully";
+			String newItems = readFeedbacks();
+			output = "{\"status\":\"success\", \"data\": \"" +
+			newItems + "\"}";
 		}
 		catch (Exception e)
 		{
-			output = "Error while deleting the feedback details.";
-			System.err.println(e.getMessage());
+			output = "{\"status\":\"error\", \"data\": \"Error while deleting the item.\"}";
+					System.err.println(e.getMessage());
 		}
 		
 		return output;

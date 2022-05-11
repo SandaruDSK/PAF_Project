@@ -27,35 +27,125 @@ $(document).on("click", "#btnSave", function(event)
 		return;
 	}
 	
+	// If valid------------------------
+	$("#formFeedback").submit();
+	
 	var type = ($("#btnSave").val() == "") ? "POST" : "PUT";
 	
-	// If valid
-	// Generate the card and append
-	
-	var student = getStudentCard(
-		$("#txtName").val().trim(),
-		$("#txtContactNo").val().trim(),
-		$("#txtEmail").val().trim(),
-		$("#Message").val().trim()
-	);
-	
-	$("#colfeedback").append(student);
-	$("#alertSuccess").text("Saved successfully.");
-	$("#alertSuccess").show();
-	$("#formFeedback")[0].reset();
+	$.ajax(
+    {
+	     url : "FeedbackAPI",
+	     type : type,
+	     data : $("#formFeedback").serialize(),
+	     dataType : "text",
+	     complete : function(response, status)
+	     {
+	     onUserSaveComplete(response.responseText, status);
+	     }
+    });
+
 });
 
+function onFeedbackSaveComplete(response, status)
+{
+	if (status == "success")
+ 	{
+  		var resultSet = JSON.parse(response);
+
+  		if (resultSet.status.trim() == "success")
+  		{
+	
+    		$("#alertSuccess").text("Successfully saved.");
+    		$("#alertSuccess").show();
+    
+    		$("#divFeedbackGrid").html(resultSet.data);
+  		} 
+
+		else if (resultSet.status.trim() == "error")
+  		{
+    		$("#alertError").text(resultSet.data);
+    		$("#alertError").show();
+  		}
+   		} else if (status == "error")
+   		{
+     		$("#alertError").text("Error while saving.");
+     		$("#alertError").show();
+   		} else
+   		{
+     		$("#alertError").text("Unknown error while saving..");
+     		$("#alertError").show();
+   		}
+
+    $("#hidFeedbackIDSave").val("");
+    $("#formFeedback")[0].reset();
+}
+
+
+// UPDATE
+$(document).on("click", ".btnUpdate", function(event)
+{
+	$("#hidFeedbackIDSave").val($(this).closest("tr").find('#hidFeedbackIDUpdate').val());
+	$("#F_Name").val($(this).closest("tr").find('td:eq(0)').text());
+	$("#F_ContactNo").val($(this).closest("tr").find('td:eq(1)').text());
+	$("#F_Email").val($(this).closest("tr").find('td:eq(2)').text());
+	$("#F_Message").val($(this).closest("tr").find('td:eq(3)').text());
+});
+
+$(document).on("click", ".btnRemove", function(event)
+{
+   $.ajax(
+   {
+     url : "FeedbackAPI",
+     type : "DELETE",
+     data : "F_ID=" + $(this).data("itemid"),
+     dataType : "text",
+     complete : function(response, status)
+     {
+     	onUserDeleteComplete(response.responseText, status);
+     }
+    });
+});
+
+function onUserDeleteComplete(response, status)
+{
+	if (status == "success")
+ 	{
+	
+ 		var resultSet = JSON.parse(response);
+	
+ 		if (resultSet.status.trim() == "success")
+ 		{
+ 			$("#alertSuccess").text("Successfully deleted.");
+ 			$("#alertSuccess").show();
+ 			$("#divFeedbackGrid").html(resultSet.data);
+		
+ 		} else if (resultSet.status.trim() == "error")
+ 		{
+ 			$("#alertError").text(resultSet.data);
+ 			$("#alertError").show();
+ 		}
+ } else if (status == "error")
+ 	{
+ 		$("#alertError").text("Error while deleting.");
+ 		$("#alertError").show();
+ 	} else
+ 	{
+ 		$("#alertError").text("Unknown error while deleting..");
+ 		$("#alertError").show();
+ 	}
+}
+// VALIDATE FEEDBACK FORM
 function validateFeedbackForm()
 {
 	//Validations
 	//NAME
-	if ($("#txtName").val().trim() == "")
+	if ($("#F_Name").val().trim() == "")
 	{
 		return "Insert name.";
 	}
 	
 	//CONTACT NO
-	if ($("#txtContactNo").val().trim() == "")
+	if ($("#F_ContactNo").val().trim() == "")
 	{
 		return "Insert contact number.";
 	}
@@ -66,17 +156,17 @@ function validateFeedbackForm()
     	return regex.test(email);
 	}
 	
-	if ($("#txtEmail").val().trim() == "")
+	if ($("#F_Email").val().trim() == "")
 	{
 		return "Insert Email.";
 	}
 	
-	else if(!isEmail($("#txtEmail").val())){
+	else if(!isEmail($("#F_Email").val())){
   		return "Insert valid Email";
-}
+	}
 
 	//MESSAGE
-	if ($("#txtMessage").val().trim() == "")
+	if ($("#F_Message").val().trim() == "")
 	{
 		return "Insert feedback.";
 	}
@@ -84,7 +174,7 @@ function validateFeedbackForm()
 	return true;
 }
 
-
+/*
 function getStudentCard(name, contactno, email,message)
 {
 	//var title = (gender == "Male") ? "Mr." : "Ms.";
@@ -124,5 +214,5 @@ function getStudentCard(name, contactno, email,message)
 		student += "<input type=\"button\" value=\"Remove\" class=\"btn btn-danger remove\">";
 		student += "</div>";
 	return student;
-}
+}*/
 
